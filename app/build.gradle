@@ -1,0 +1,47 @@
+plugins {
+    id "com.android.application"
+}
+
+// Release signing is read from environment variables so the signing key never
+// lives in the repo. When they are absent (for example the very first CI run
+// before you have created a key), the release build falls back to the debug
+// key so it is still installable. See README.md -> "Signing".
+def ksPath = System.getenv("CELLSHIELD_KEYSTORE")
+def hasReleaseKey = ksPath != null && !ksPath.trim().isEmpty() && file(ksPath).exists()
+
+android {
+    namespace "com.retrodad.cellshield"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.retrodad.cellshield"
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    signingConfigs {
+        if (hasReleaseKey) {
+            release {
+                storeFile file(ksPath)
+                storePassword System.getenv("CELLSHIELD_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("CELLSHIELD_KEY_ALIAS")
+                keyPassword System.getenv("CELLSHIELD_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig hasReleaseKey ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

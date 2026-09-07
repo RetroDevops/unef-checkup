@@ -1,0 +1,22 @@
+# Gradle / Android build output
+.gradle/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IDE
+*.iml
+.idea/
+local.properties
+
+# Signing material - never commit real keystores
+*.keystore
+*.jks
+!app/debug.keystore
+keystore.properties
+
+# Local artifacts
+dist/
+.DS_Store

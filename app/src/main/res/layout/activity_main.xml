@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            style="@style/TitleText" />
+
+        <TextView
+            android:id="@+id/version_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:text="Version" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tagline"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingMultiplier="1.15" />
+
+        <Button
+            android:id="@+id/check_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/check_button"
+            style="@style/PrimaryButton" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"
+            android:background="@drawable/card_bg">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/results_heading"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:letterSpacing="0.03" />
+
+            <TextView
+                android:id="@+id/results_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/results_idle"
+                style="@style/BodyText" />
+
+            <LinearLayout
+                android:id="@+id/findings_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/section_fix"
+            style="@style/SectionText" />
+
+        <Button android:id="@+id/dns_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_dns" style="@style/SectionButton" />
+        <Button android:id="@+id/apps_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_apps" style="@style/SectionButton" />
+        <Button android:id="@+id/storage_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_storage" style="@style/SectionButton" />
+        <Button android:id="@+id/browser_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_browser" style="@style/SectionButton" />
+        <Button android:id="@+id/backup_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_backup" style="@style/SectionButton" />
+        <Button android:id="@+id/protect_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_protect" style="@style/SectionButton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/section_about"
+            style="@style/SectionText" />
+
+        <Button android:id="@+id/capabilities_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_capabilities" style="@style/SectionButton" />
+        <Button android:id="@+id/share_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_share" style="@style/SectionButton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/footer"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingMultiplier="1.2" />
+    </LinearLayout>
+</ScrollView>
