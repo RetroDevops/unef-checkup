@@ -42,7 +42,7 @@ jobs:
             -keyalg RSA -keysize 2048 -validity 10000 \
             -storepass "$KEYSTORE_PASSWORD" \
             -keypass "$KEYSTORE_PASSWORD" \
-            -dname "CN=Cell Shield Lite, OU=Family, O=Cell Shield Lite, L=Home, ST=NA, C=US"
+            -dname "CN=Unef Checkup, OU=Family, O=Unef Checkup, L=Home, ST=NA, C=US"
           base64 -w0 release.keystore > release.keystore.base64
           echo "Created release.keystore"
 

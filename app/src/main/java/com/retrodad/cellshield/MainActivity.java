@@ -198,9 +198,9 @@ public class MainActivity extends Activity {
     private void shareReport() {
         String body = resultsText.getText().toString();
         if (TextUtils.isEmpty(body) || getString(R.string.results_idle).equals(body)) {
-            body = "I have not run a check in Cell Shield Lite yet.";
+            body = "I have not run a check in Unef Checkup yet.";
         }
-        Links.shareText(this, "Cell Shield Lite report", body);
+        Links.shareText(this, "Unef Checkup report", body);
     }
 
     private void dialog(String title, String message) {

@@ -1,6 +1,6 @@
 # Privacy
 
-Cell Shield Lite is designed to collect nothing.
+Unef Checkup is designed to collect nothing.
 
 ## What it reads
 

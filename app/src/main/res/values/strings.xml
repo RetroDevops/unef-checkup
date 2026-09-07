@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cell Shield Lite</string>
+    <string name="app_name">Unef Checkup</string>
     <string name="tagline">A simple safety helper. It checks your phone and opens the right Android settings for you.</string>
 
     <string name="check_button">Check my phone</string>
@@ -20,10 +20,10 @@
     <string name="btn_capabilities">What this app can and can’t do</string>
     <string name="btn_share">Send this report to my family</string>
 
-    <string name="footer">Cell Shield Lite never collects your data and cannot secretly change your phone. It only opens Android’s own screens and reads the list of installed apps.</string>
+    <string name="footer">Unef Checkup never collects your data and cannot secretly change your phone. It only opens Android’s own screens and reads the list of installed apps.</string>
 
     <string name="welcome_title">Welcome</string>
-    <string name="welcome_body">Cell Shield Lite is a guide, not a virus scanner.\n\nIt can:\n• Check which apps use powerful permissions\n• Tell you whether pop-up blocking (Private DNS) is on\n• Open Android’s own screens for storage, backups and Play Protect\n\nIt does not collect any data and it cannot change your phone by itself. You stay in control.</string>
+    <string name="welcome_body">Unef Checkup is a guide, not a virus scanner.\n\nIt can:\n• Check which apps use powerful permissions\n• Tell you whether pop-up blocking (Private DNS) is on\n• Open Android’s own screens for storage, backups and Play Protect\n\nIt does not collect any data and it cannot change your phone by itself. You stay in control.</string>
 
     <string name="capabilities_title">What this app can and can’t do</string>
     <string name="capabilities_body">CAN DO\n• Check installed apps for powerful permissions (screen overlay, accessibility, reading text messages, installing apps)\n• Show whether Private DNS pop-up blocking is turned on\n• Take you straight to the Android screen to uninstall an app, clear browser data, free storage, back up, or open Play Protect\n\nCANNOT DO\nAndroid does not let an app you install from a link remove other apps by itself, read every app’s private data, or work as a full antivirus. Keep Google Play Protect turned on for malware scanning.</string>
