@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +33,16 @@ jobs:
       - name: Generate Gradle wrapper
         run: gradle wrapper --gradle-version 8.9
 
+      # Keep the fallback debug signing key stable across builds, so an APK
+      # built today and an update built later use the SAME signature and
+      # install over each other cleanly. Ignored once real signing secrets
+      # are configured (see README -> Signing).
+      - name: Cache debug signing key
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: unef-debug-keystore-v1
+
       - name: Prepare signing key
         id: signing
         env:
@@ -40,7 +54,7 @@ jobs:
             echo "Signing the release APK with the key from repository secrets."
           else
             echo "keystore=" >> "$GITHUB_OUTPUT"
-            echo "No KEYSTORE_BASE64 secret found - the release APK will be signed with the debug key (still installable)."
+            echo "::warning::No KEYSTORE_BASE64 secret set. Building with the (cached) Android debug key. Fine for family sideloading; set up real signing secrets before wider distribution - see README."
           fi
 
       - name: Build release APK
