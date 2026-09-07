@@ -47,12 +47,13 @@ app/src/main/java/com/retrodad/cellshield/
   MainActivity.java   UI wiring, one screen
   PhoneCheck.java     read-only checks (Private DNS + app permission heuristic)
   Links.java          open Android settings screens, with fallbacks
-app/src/main/res/      layout, strings, colors, theme, launcher icon
+app/src/main/res/      layout, item rows, vector icons, slate/amber theme, launcher icon
 .github/workflows/     cloud build + one-time signing-key helper
 ```
 
 Toolchain: Android Gradle Plugin 8.7.2, Gradle 8.9, JDK 17, `compileSdk` 35,
-`minSdk` 26. Pure Java, no third-party dependencies.
+`minSdk` 26. Java, one dependency (`com.google.android.material` for the
+Material 3 components and theme). Release APK is roughly 4.5 MB.
 
 ## Getting the APK (cloud build)
 
