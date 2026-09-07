@@ -115,15 +115,15 @@ To use your own stable key (do this once you know you will ship updates):
 ## Updating the app on your parents' phones
 
 Android only lets an update install over an existing app if it is signed with
-the same key. This project caches its fallback debug key between builds
-(`unef-debug-keystore-v1`), so a rebuild months later still produces a
-compatible update: your parents just download the new `UnefCheckup.apk` and
-install it over the old one.
+the same key. The build generates a fallback signing key once and keeps it in
+the Actions cache (`unef-fallback-keystore-v1`), so a rebuild months later
+still produces a compatible update: your parents just download the new
+`UnefCheckup.apk` and install it over the old one.
 
 Two things break that compatibility:
 
 - Setting up your own signing secrets later (the key changes once).
-- Deleting the `unef-debug-keystore-v1` GitHub Actions cache.
+- Deleting the `unef-fallback-keystore-v1` GitHub Actions cache.
 
 If either happens, the next update will fail to install and your parents need
 to uninstall the old app first, then install the new one. Nothing is lost
