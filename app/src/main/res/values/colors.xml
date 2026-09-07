@@ -1,12 +1,29 @@
 <resources>
-    <color name="brand">#1A73E8</color>
-    <color name="brand_dark">#1558B0</color>
-    <color name="text_primary">#202124</color>
-    <color name="text_secondary">#5F6368</color>
+    <color name="ink">#1D1D1F</color>
+    <color name="ink_pressed">#333336</color>
+    <color name="paper">#F7F6F3</color>
     <color name="surface">#FFFFFF</color>
-    <color name="card">#F1F3F4</color>
-    <color name="card_stroke">#DADCE0</color>
-    <color name="warn">#C5221F</color>
-    <color name="caution">#E37400</color>
-    <color name="ok">#188038</color>
+    <color name="hairline">#E6E3DD</color>
+    <color name="hairline_strong">#CFCBC2</color>
+
+    <color name="text_primary">#1D1D1F</color>
+    <color name="text_secondary">#6E6E73</color>
+
+    <color name="accent">#BD7B2E</color>
+    <color name="accent_ink">#5C3A12</color>
+    <color name="accent_tint">#F5E9D6</color>
+
+    <color name="ok">#2E7D32</color>
+    <color name="ok_ink">#1B4D1F</color>
+    <color name="ok_tint">#E4EFE4</color>
+
+    <color name="warn">#B26A00</color>
+    <color name="warn_ink">#6B4100</color>
+    <color name="warn_tint">#F6E8D2</color>
+
+    <color name="danger">#B3261E</color>
+    <color name="danger_ink">#6E1712</color>
+    <color name="danger_tint">#F7E4E2</color>
+
+    <color name="on_ink">#FFFFFF</color>
 </resources>

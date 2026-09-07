@@ -1,26 +1,30 @@
 <resources>
     <string name="app_name">Unef Checkup</string>
-    <string name="tagline">A simple safety helper. It checks your phone and opens the right Android settings for you.</string>
+    <string name="header_sub">Your phone, checked and tidy</string>
 
     <string name="check_button">Check my phone</string>
-    <string name="results_heading">Last check</string>
-    <string name="results_idle">Tap \"Check my phone\" above to run a quick check. Nothing is sent anywhere.</string>
     <string name="checking">Checking…</string>
+    <string name="status_idle_title">Not checked yet</string>
+    <string name="results_idle">Tap "Check my phone" to run a quick, private check. Nothing is sent anywhere.</string>
 
-    <string name="section_fix">Fix things</string>
-    <string name="section_about">About</string>
+    <string name="quick_fixes">Quick fixes</string>
+    <string name="about">About</string>
 
-    <string name="btn_dns">Block pop-ups and ads</string>
-    <string name="btn_apps">Review risky apps</string>
-    <string name="btn_storage">Free up storage</string>
-    <string name="btn_browser">Clear browser data</string>
-    <string name="btn_backup">Back up my phone</string>
-    <string name="btn_protect">Check Google Play Protect</string>
+    <string name="row_dns_title">Block pop-ups and ads</string>
+    <string name="row_dns_sub">Set up Private DNS</string>
+    <string name="row_storage_title">Free up storage</string>
+    <string name="row_storage_sub">See what is using space</string>
+    <string name="row_browser_title">Clear browser data</string>
+    <string name="row_browser_sub">Cache and cookies</string>
+    <string name="row_backup_title">Back up my phone</string>
+    <string name="row_backup_sub">Before you clean up</string>
+    <string name="row_protect_title">Check Play Protect</string>
+    <string name="row_protect_sub">Android\'s malware scan</string>
 
     <string name="btn_capabilities">What this app can and can’t do</string>
     <string name="btn_share">Send this report to my family</string>
 
-    <string name="footer">Unef Checkup never collects your data and cannot secretly change your phone. It only opens Android’s own screens and reads the list of installed apps.</string>
+    <string name="footer_short">No data leaves your phone. It only opens Android’s own screens and reads the list of installed apps.</string>
 
     <string name="welcome_title">Welcome</string>
     <string name="welcome_body">Unef Checkup is a guide, not a virus scanner.\n\nIt can:\n• Check which apps use powerful permissions\n• Tell you whether pop-up blocking (Private DNS) is on\n• Open Android’s own screens for storage, backups and Play Protect\n\nIt does not collect any data and it cannot change your phone by itself. You stay in control.</string>
@@ -28,15 +32,16 @@
     <string name="capabilities_title">What this app can and can’t do</string>
     <string name="capabilities_body">CAN DO\n• Check installed apps for powerful permissions (screen overlay, accessibility, reading text messages, installing apps)\n• Show whether Private DNS pop-up blocking is turned on\n• Take you straight to the Android screen to uninstall an app, clear browser data, free storage, back up, or open Play Protect\n\nCANNOT DO\nAndroid does not let an app you install from a link remove other apps by itself, read every app’s private data, or work as a full antivirus. Keep Google Play Protect turned on for malware scanning.</string>
 
-    <string name="dns_guidance">In the screen that opens, set Private DNS to a trusted blocker such as dns.adguard-dns.com. If a website’s \"I am not a robot\" check stops working, switch Private DNS back to Automatic for a few minutes.</string>
+    <string name="dns_guidance">In the screen that opens, set Private DNS to a trusted blocker such as dns.adguard-dns.com. If a website’s "I am not a robot" check stops working, switch Private DNS back to Automatic for a few minutes.</string>
     <string name="storage_guidance">Use this Android screen to see what is using space and remove files or unused apps.</string>
     <string name="browser_guidance">Open your browser (Chrome, Samsung Internet, Firefox…), then choose Storage and cache to clear cached files and site data.</string>
     <string name="backup_guidance">Turn on Google backup or your phone maker’s cloud backup before you clean anything up.</string>
-    <string name="protect_guidance">Make sure \"Scan apps with Play Protect\" is turned on. This is Android’s built-in malware scanner.</string>
+    <string name="protect_guidance">Make sure "Scan apps with Play Protect" is turned on. This is Android’s built-in malware scanner.</string>
 
-    <string name="no_findings">Good news: no installed apps stood out for powerful permissions. This is not a full virus scan, so keep Play Protect on as well.</string>
-    <string name="findings_note">Note: many trustworthy apps (password managers, screen readers, text-message apps) use these permissions on purpose. This is a prompt to check, not an accusation.</string>
+    <string name="status_all_clear">Looks good</string>
+    <string name="no_findings">No installed apps stood out for powerful permissions. This is not a full virus scan, so keep Play Protect on as well.</string>
+    <string name="findings_note">Many trustworthy apps (password managers, screen readers, text-message apps) use these permissions on purpose. This is a prompt to check, not an accusation.</string>
 
-    <string name="open_app_info">Open app info</string>
-    <string name="uninstall">Uninstall</string>
+    <string name="open_app_info">App info</string>
+    <string name="uninstall">Remove</string>
 </resources>

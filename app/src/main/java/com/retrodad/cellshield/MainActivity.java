@@ -1,33 +1,42 @@
 package com.retrodad.cellshield;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 /**
- * Single screen. The top button runs a quick read-only check; the rest of the
- * buttons open the matching Android settings screen and show a short tip.
+ * Single screen. The primary button runs a quick read-only check; the "quick
+ * fixes" rows explain a task then open the matching Android settings screen.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String PREFS = "cellshield";
     private static final String KEY_SEEN_WELCOME = "seen_welcome";
-    private static final String KEY_LAST_SUMMARY = "last_summary";
+    private static final String KEY_LAST_TITLE = "last_title";
+    private static final String KEY_LAST_DETAIL = "last_detail";
+    private static final String KEY_LAST_SEV = "last_sev";
 
-    private TextView resultsText;
-    private LinearLayout findingsContainer;
     private SharedPreferences prefs;
+    private ImageView statusIcon;
+    private TextView statusTitle;
+    private TextView statusDetail;
+    private LinearLayout findingsContainer;
+    private LinearLayout fixesContainer;
+    private int lastSev;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -35,40 +44,21 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
 
-        ((TextView) findViewById(R.id.version_text)).setText("Version " + appVersion());
-        resultsText = findViewById(R.id.results_text);
+        statusIcon = findViewById(R.id.status_icon);
+        statusTitle = findViewById(R.id.status_title);
+        statusDetail = findViewById(R.id.status_detail);
         findingsContainer = findViewById(R.id.findings_container);
+        fixesContainer = findViewById(R.id.fixes_container);
 
-        String last = prefs.getString(KEY_LAST_SUMMARY, null);
-        if (!TextUtils.isEmpty(last)) {
-            resultsText.setText(last);
-        }
+        populateFixes();
 
         findViewById(R.id.check_button).setOnClickListener(v -> runCheck());
-        findViewById(R.id.apps_button).setOnClickListener(v -> runCheck());
-        findViewById(R.id.dns_button).setOnClickListener(v -> {
-            Links.openPrivateDns(this);
-            tip(getString(R.string.dns_guidance));
-        });
-        findViewById(R.id.storage_button).setOnClickListener(v -> {
-            Links.openInternalStorage(this);
-            tip(getString(R.string.storage_guidance));
-        });
-        findViewById(R.id.browser_button).setOnClickListener(v -> {
-            Links.openDefaultBrowser(this);
-            tip(getString(R.string.browser_guidance));
-        });
-        findViewById(R.id.backup_button).setOnClickListener(v -> {
-            Links.openBackup(this);
-            tip(getString(R.string.backup_guidance));
-        });
-        findViewById(R.id.protect_button).setOnClickListener(v -> {
-            Links.openPlayProtect(this);
-            tip(getString(R.string.protect_guidance));
-        });
         findViewById(R.id.capabilities_button).setOnClickListener(v -> dialog(
-                getString(R.string.capabilities_title), getString(R.string.capabilities_body)));
+                getString(R.string.capabilities_title),
+                getString(R.string.capabilities_body) + "\n\nVersion " + appVersion()));
         findViewById(R.id.share_button).setOnClickListener(v -> shareReport());
+
+        restoreLast();
 
         if (!prefs.getBoolean(KEY_SEEN_WELCOME, false)) {
             dialog(getString(R.string.welcome_title), getString(R.string.welcome_body));
@@ -76,151 +66,164 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void populateFixes() {
+        LayoutInflater inf = getLayoutInflater();
+        addFix(inf, R.drawable.ic_dns, R.string.row_dns_title, R.string.row_dns_sub,
+                R.string.dns_guidance, () -> Links.openPrivateDns(this));
+        addFix(inf, R.drawable.ic_storage, R.string.row_storage_title, R.string.row_storage_sub,
+                R.string.storage_guidance, () -> Links.openInternalStorage(this));
+        addFix(inf, R.drawable.ic_browser, R.string.row_browser_title, R.string.row_browser_sub,
+                R.string.browser_guidance, () -> Links.openDefaultBrowser(this));
+        addFix(inf, R.drawable.ic_backup, R.string.row_backup_title, R.string.row_backup_sub,
+                R.string.backup_guidance, () -> Links.openBackup(this));
+        addFix(inf, R.drawable.ic_protect, R.string.row_protect_title, R.string.row_protect_sub,
+                R.string.protect_guidance, () -> Links.openPlayProtect(this));
+    }
+
+    private void addFix(LayoutInflater inf, int iconRes, int titleRes, int subRes,
+                        int guidanceRes, Runnable open) {
+        View row = inf.inflate(R.layout.item_fix_row, fixesContainer, false);
+        ((ImageView) row.findViewById(R.id.row_icon)).setImageResource(iconRes);
+        ((TextView) row.findViewById(R.id.row_title)).setText(titleRes);
+        ((TextView) row.findViewById(R.id.row_sub)).setText(subRes);
+        row.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                .setTitle(titleRes)
+                .setMessage(guidanceRes)
+                .setPositiveButton("Open settings", (d, w) -> open.run())
+                .setNegativeButton("Not now", null)
+                .show());
+        fixesContainer.addView(row);
+    }
+
     private void runCheck() {
-        resultsText.setText(R.string.checking);
+        statusIcon.setImageResource(R.drawable.ic_scan);
+        statusIcon.setColorFilter(getColor(R.color.text_secondary));
+        statusTitle.setText(R.string.checking);
+        statusDetail.setText("");
         findingsContainer.removeAllViews();
-        // Let "Checking..." paint before the (brief) synchronous scan runs.
-        resultsText.post(() -> {
+        statusTitle.post(() -> {
             PhoneCheck.Result r = PhoneCheck.run(this);
-            resultsText.setText(buildSummary(r));
-            renderFindings(r);
-            prefs.edit().putString(KEY_LAST_SUMMARY, resultsText.getText().toString()).apply();
+            renderResult(r);
+            prefs.edit()
+                    .putString(KEY_LAST_TITLE, statusTitle.getText().toString())
+                    .putString(KEY_LAST_DETAIL, statusDetail.getText().toString())
+                    .putInt(KEY_LAST_SEV, lastSev)
+                    .apply();
         });
     }
 
-    private String buildSummary(PhoneCheck.Result r) {
-        StringBuilder b = new StringBuilder();
-        b.append("Checked ")
-         .append(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-                 .format(new Date()))
-         .append("\n\n");
+    private void renderResult(PhoneCheck.Result r) {
+        int n = r.riskyApps.size();
+        boolean warn = n > 0;
+        lastSev = warn ? 1 : 0;
 
-        b.append("Pop-up blocking (Private DNS): ");
+        String dnsPart;
         if (!r.dnsKnown) {
-            b.append("unknown (needs Android 9 or newer)");
+            dnsPart = "Private DNS status needs Android 9 or newer";
         } else if (r.dnsOn) {
-            b.append("ON");
-            if (!TextUtils.isEmpty(r.dnsName)) {
-                b.append(" (").append(r.dnsName).append(")");
-            }
+            dnsPart = "Private DNS on"
+                    + (TextUtils.isEmpty(r.dnsName) ? "" : " (" + r.dnsName + ")");
         } else {
-            b.append("OFF - tap \"Block pop-ups and ads\" to turn it on");
+            dnsPart = "Private DNS off";
         }
-        b.append("\n\n");
+        String when = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+                .format(new Date());
 
-        if (r.riskyApps.isEmpty()) {
-            b.append(getString(R.string.no_findings));
+        String detail;
+        if (warn) {
+            setStatus(R.drawable.ic_alert, R.color.warn,
+                    n + (n == 1 ? " app to review" : " apps to review"));
+            detail = "Checked " + when + ". " + dnsPart + ".\n\n" + getString(R.string.findings_note);
         } else {
-            int high = 0;
-            for (PhoneCheck.RiskyApp a : r.riskyApps) {
-                if (a.isHigh()) high++;
-            }
-            b.append(r.riskyApps.size())
-             .append(r.riskyApps.size() == 1 ? " app uses " : " apps use ")
-             .append("powerful permissions");
-            if (high > 0) {
-                b.append(" (").append(high).append(" worth a closer look)");
-            }
-            b.append(".\n").append(getString(R.string.findings_note));
+            setStatus(R.drawable.ic_check_circle, R.color.ok, getString(R.string.status_all_clear));
+            detail = "Checked " + when + ". " + dnsPart + ".\n\n" + getString(R.string.no_findings);
         }
+        statusDetail.setText(detail);
 
-        b.append("\n\nScanned ").append(r.scannedApps)
-         .append(" installed apps. Keep Google Play Protect on for malware scanning.");
-        return b.toString();
-    }
-
-    private void renderFindings(PhoneCheck.Result r) {
-        int shown = Math.min(r.riskyApps.size(), 10);
+        findingsContainer.removeAllViews();
+        int shown = Math.min(n, 12);
+        LayoutInflater inf = getLayoutInflater();
         for (int i = 0; i < shown; i++) {
-            findingsContainer.addView(buildFindingRow(r.riskyApps.get(i)));
+            addFindingRow(inf, r.riskyApps.get(i));
         }
-        if (r.riskyApps.size() > shown) {
+        if (n > shown) {
             TextView more = new TextView(this);
-            more.setText("+ " + (r.riskyApps.size() - shown) + " more not shown");
-            more.setTextColor(0xFF5F6368);
-            more.setTextSize(14);
-            more.setPadding(0, dp(12), 0, 0);
+            more.setText("+ " + (n - shown) + " more not shown");
+            more.setTextColor(getColor(R.color.text_secondary));
+            more.setTextSize(13);
+            more.setPadding(dp(16), dp(12), 0, dp(2));
             findingsContainer.addView(more);
         }
     }
 
-    private LinearLayout buildFindingRow(PhoneCheck.RiskyApp app) {
-        LinearLayout row = new LinearLayout(this);
-        row.setOrientation(LinearLayout.VERTICAL);
-        row.setBackgroundResource(R.drawable.row_bg);
-        row.setPadding(dp(14), dp(12), dp(14), dp(12));
-        LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rowParams.topMargin = dp(10);
-        row.setLayoutParams(rowParams);
-
-        TextView name = new TextView(this);
-        name.setText(app.label);
-        name.setTextSize(17);
-        name.setTextColor(0xFF202124);
-        name.setTypeface(name.getTypeface(), Typeface.BOLD);
-        row.addView(name);
-
-        TextView why = new TextView(this);
-        why.setText("This app " + TextUtils.join("; ", app.reasons) + ".");
-        why.setTextSize(14);
-        why.setTextColor(app.isHigh() ? 0xFFC5221F : 0xFFE37400);
-        why.setPadding(0, dp(4), 0, dp(10));
-        row.addView(why);
-
-        LinearLayout actions = new LinearLayout(this);
-        actions.setOrientation(LinearLayout.HORIZONTAL);
-
-        Button info = compactButton(getString(R.string.open_app_info));
+    private void addFindingRow(LayoutInflater inf, PhoneCheck.RiskyApp app) {
+        View row = inf.inflate(R.layout.item_finding, findingsContainer, false);
+        row.findViewById(R.id.finding_dot).setBackgroundTintList(ColorStateList.valueOf(
+                getColor(app.isHigh() ? R.color.danger : R.color.warn)));
+        ((TextView) row.findViewById(R.id.finding_name)).setText(app.label);
+        ((TextView) row.findViewById(R.id.finding_reason))
+                .setText(sentence(TextUtils.join(", ", app.reasons)));
+        MaterialButton info = row.findViewById(R.id.finding_info);
+        MaterialButton remove = row.findViewById(R.id.finding_remove);
         info.setOnClickListener(v -> Links.openAppInfo(this, app.pkg));
-        actions.addView(info);
-
-        Button uninstall = compactButton(getString(R.string.uninstall));
-        uninstall.setOnClickListener(v -> Links.requestUninstall(this, app.pkg));
-        actions.addView(uninstall);
-
-        row.addView(actions);
-        return row;
+        remove.setOnClickListener(v -> Links.requestUninstall(this, app.pkg));
+        findingsContainer.addView(row);
     }
 
-    private Button compactButton(String label) {
-        Button btn = new Button(this);
-        btn.setText(label);
-        btn.setAllCaps(false);
-        btn.setTextSize(14);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.rightMargin = dp(8);
-        btn.setLayoutParams(lp);
-        return btn;
+    private void setStatus(int iconRes, int colorRes, String title) {
+        statusIcon.setImageResource(iconRes);
+        statusIcon.setColorFilter(getColor(colorRes));
+        statusTitle.setText(title);
+    }
+
+    private void restoreLast() {
+        String title = prefs.getString(KEY_LAST_TITLE, null);
+        if (title == null) {
+            return;
+        }
+        if (prefs.getInt(KEY_LAST_SEV, 0) == 1) {
+            statusIcon.setImageResource(R.drawable.ic_alert);
+            statusIcon.setColorFilter(getColor(R.color.warn));
+        } else {
+            statusIcon.setImageResource(R.drawable.ic_check_circle);
+            statusIcon.setColorFilter(getColor(R.color.ok));
+        }
+        statusTitle.setText(title);
+        statusDetail.setText(prefs.getString(KEY_LAST_DETAIL, ""));
     }
 
     private void shareReport() {
-        String body = resultsText.getText().toString();
-        if (TextUtils.isEmpty(body) || getString(R.string.results_idle).equals(body)) {
+        CharSequence detail = statusDetail.getText();
+        String body;
+        if (TextUtils.isEmpty(detail) || getString(R.string.results_idle).contentEquals(detail)) {
             body = "I have not run a check in Unef Checkup yet.";
+        } else {
+            body = statusTitle.getText() + "\n\n" + detail;
         }
         Links.shareText(this, "Unef Checkup report", body);
     }
 
     private void dialog(String title, String message) {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("OK", null)
                 .show();
     }
 
-    private void tip(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    private static String sentence(String s) {
+        if (s == null || s.isEmpty()) {
+            return "";
+        }
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1) + ".";
     }
 
     private String appVersion() {
         try {
             String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            return v != null ? v : "1.0";
+            return v != null ? v : "1.1";
         } catch (Exception e) {
-            return "1.0";
+            return "1.1";
         }
     }
 
