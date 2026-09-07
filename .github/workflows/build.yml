@@ -65,8 +65,17 @@ jobs:
           path: dist/UnefCheckup.apk
           if-no-files-found: error
 
-      - name: Attach APK to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'latest' }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'Latest build' }}
           files: dist/UnefCheckup.apk
+          make_latest: true
+          body: |
+            Automated build of Unef Checkup.
+
+            Direct download for family:
+            https://github.com/RetroDevops/unef-checkup/releases/latest/download/UnefCheckup.apk
+
+            Install steps: see INSTALL-FOR-PARENTS.md in the repo.
