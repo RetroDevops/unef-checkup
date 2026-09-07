@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/figtree_semibold"
             android:textSize="15sp"
             android:textColor="@color/text_primary" />
     </LinearLayout>

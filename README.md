@@ -53,7 +53,11 @@ app/src/main/res/      layout, item rows, vector icons, slate/amber theme, launc
 
 Toolchain: Android Gradle Plugin 8.7.2, Gradle 8.9, JDK 17, `compileSdk` 35,
 `minSdk` 26. Java, one dependency (`com.google.android.material` for the
-Material 3 components and theme). Release APK is roughly 4.5 MB.
+Material 3 components and theme). Release APK is roughly 4.7 MB.
+
+The UI font is Figtree (regular + semibold), bundled in `app/src/main/res/font`.
+Figtree is licensed under the SIL Open Font License 1.1; the licence text is at
+[third_party/figtree/OFL.txt](third_party/figtree/OFL.txt).
 
 ## Getting the APK (cloud build)
 

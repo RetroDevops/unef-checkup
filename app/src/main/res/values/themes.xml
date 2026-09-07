@@ -22,6 +22,9 @@
         <item name="android:navigationBarColor">@color/paper</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+
+        <item name="fontFamily">@font/figtree</item>
+        <item name="android:fontFamily">@font/figtree</item>
     </style>
 
 </resources>

@@ -2,3 +2,6 @@
 *.jar binary
 *.keystore binary
 *.png binary
+*.ttf binary
+*.otf binary
+*.apk binary
